@@ -1,0 +1,21 @@
+.cache
+.vscode
+*.log
+*.csv
+*.xlsx
+/python_env/
+/test_*
+/clean
+__pycache__
+# PyBind extensions and wheel setup
+# *.egg-info/
+# *.so
+# .installed.cfg
+# *.egg
+
+# exclude pytorch binaries
+*.pt
+
+# exclude binaries
+*.bin
+.ipynb_checkpoints/
