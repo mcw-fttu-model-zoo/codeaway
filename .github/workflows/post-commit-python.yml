@@ -1,0 +1,40 @@
+
+name: post-commit-python
+
+on:
+  workflow_call:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11"]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          cache: "pip"
+          cache-dependency-path: python_env/requirements-dev.txt
+      - name: Install dependencies
+        run: |
+          echo "INF_HOME=$(pwd)" >> $GITHUB_ENV
+          python -m pip install --upgrade pip
+          pip install -r python_env/requirements-dev.txt
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Run Black
+        run: |
+          cd $INF_HOME
+          export PYTHONPATH=$INF_HOME
+          black --version
+          black .
+      - name: Test with pytest
+        run: |
+          cd $INF_HOME
+          export PYTHONPATH=$INF_HOME
+          pytest
